@@ -1,0 +1,117 @@
+#coding:utf-8
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+def LineFunction(x,a,b):
+    return a * x + b
+#线性方程
+
+if __name__ == '__main__':
+    
+    plt.title("")
+    plt.xlabel("x value")
+    plt.ylabel("y value")
+    
+    ScalLowPointValue =  400
+    ScalHighPointValue = 1000
+    
+    LowHighfillalpha =0.3
+        
+    ScalLowPointValueRepeatability = 0.2
+    ScalHighPointValueRepeatability = 0.1
+    
+    LineTextXPointValue = 1100
+    LineTextYPointValue = 1100
+    
+    x = np.linspace(0, ScalHighPointValue+100)
+    y = np.linspace(0, ScalHighPointValue+100)
+    
+    LineBetwenLandH = x[np.where((x>ScalLowPointValue)&(x<ScalHighPointValue))]
+    LineBetwenZeroandL = x[np.where((x>0 )&(x<=ScalLowPointValue +5))]
+    LineBetwenZeroandH = x[np.where((x>0)&(x<=ScalHighPointValue ))]
+        
+    line, = plt.plot(x, LineFunction(x, 1, 0), '-', linewidth=2)
+    plt.annotate('y=x', xy=(LineTextXPointValue, LineTextXPointValue), xytext=(LineTextXPointValue+50, LineTextXPointValue+50), arrowprops=dict(facecolor='blue', shrink=0.1))
+    # 方程 y=x 是中线，即在理想状态下的结果变化曲线
+    
+    line, = plt.plot(x, LineFunction(x,(1-ScalHighPointValueRepeatability),0), '-.', linewidth=1)
+    plt.annotate('HighScalMaxDeviationPositiveDirection', xy=(1100, 1210), xytext=(950, 1300), arrowprops=dict(facecolor='green', shrink=0.1))
+    # 大量程段最低偏差曲线 
+    
+    line, = plt.plot(x, LineFunction(x,(1+ScalHighPointValueRepeatability),0) , '-.', linewidth=1)
+    plt.annotate('HighScalMaxDeviationNegativeDirection', xy=(1100, 1000), xytext=(1000, 850), arrowprops=dict(facecolor='red', shrink=0.1))
+    # 大量程段最高偏差曲线 
+    
+    line, = plt.plot(0 * x + ScalHighPointValue , x, '-', linewidth=1)
+    # 大量程的标志线
+    line, = plt.plot(0 * x + ScalLowPointValue , x, '-', linewidth=1)
+    # 小量程的标志线
+    
+    line, = plt.plot(x, LineFunction(x, (1+ScalLowPointValueRepeatability),0), '.-', linewidth=1)
+    plt.annotate('LowScalMaxDeviationPositiveDirection', xy=(260, 300), xytext=(50, 500),arrowprops=dict(facecolor='orange', shrink=0.1))
+    #小量程段最高偏差曲线
+    
+    line, = plt.plot(x, LineFunction(x, (1-ScalLowPointValueRepeatability),0), '.-', linewidth=1)
+    plt.annotate('LowScalMaxDeviationNegativeDirection', xy=(300, 250), xytext=(150, 70),arrowprops=dict(facecolor='black', shrink=0.1))
+    #大量程段最低偏差曲线
+#    line, = plt.plot(x, 0 * x + 900, '.', linewidth=1)
+#    plt.annotate('y=900', xy=(800, 200), xytext=(800, 200))
+#    line, = plt.plot(x, 0 * x + 1100, '.', linewidth=1)
+#    plt.annotate('y=900', xy=(800, 200), xytext=(800, 200))
+
+    linex = [ScalLowPointValue, ScalHighPointValue]
+    liney = [ScalLowPointValue * (1- ScalLowPointValueRepeatability), ScalHighPointValue * (1 - ScalHighPointValueRepeatability)]
+    plt.plot(linex, liney)
+    #小量程偏差低点 连接 大量程 偏差低点
+         
+    linex = [ScalLowPointValue, ScalHighPointValue]
+    liney = [ScalLowPointValue * (1+ScalLowPointValueRepeatability), ScalHighPointValue * (1+ ScalHighPointValueRepeatability)]
+    plt.plot(linex, liney)
+    #小量程偏差高点 连接 大量程 偏差高点
+    
+    
+    a1 = (ScalHighPointValue*(1-ScalHighPointValueRepeatability)-ScalLowPointValue*(1-ScalLowPointValueRepeatability))/(ScalHighPointValue - ScalLowPointValue)
+    b1 = ScalHighPointValue*(1-ScalHighPointValueRepeatability) - a1*ScalHighPointValue
+    line, = plt.plot(LineBetwenLandH, LineFunction(LineBetwenLandH, a1,b1), '.', linewidth=1)
+    
+    plt.fill_between(LineBetwenZeroandL , LineFunction(LineBetwenZeroandL , (1+ ScalLowPointValueRepeatability),0),LineFunction(LineBetwenZeroandL, 1, 0) ,color='blue',alpha=LowHighfillalpha)
+
+#    plt.fill_between(LineBetwenLandH , LineFunction(LineBetwenLandH , (1+ ScalHighPointValueRepeatability),0),LineFunction(LineBetwenLandH, 1, 0) ,color='blue',alpha=LowHighfillalpha)
+    
+#    plt.fill_between(LineBetwenZeroandL , LineFunction(x , a1,b1), '.', linewidth=1)
+
+    #小量程偏差低点 连接 大量程 偏差低点 方程
+    
+    a2 = (ScalHighPointValue*(1+ScalHighPointValueRepeatability)-ScalLowPointValue*(1+ScalLowPointValueRepeatability))/(ScalHighPointValue - ScalLowPointValue)
+    b2 = ScalHighPointValue*(1+ScalHighPointValueRepeatability) - a2*ScalHighPointValue
+    line, = plt.plot(LineBetwenLandH, LineFunction(LineBetwenLandH, a2,b2), '.', linewidth=1)
+##    plt.fill_between(LineBetwenLandH , LineFunction(LineBetwenLandH , a2,b2),LineFunction(LineBetwenLandH, 1, 0) ,color='red',alpha=LowHighfillalpha)
+    plt.fill_between(LineBetwenZeroandH , LineFunction(LineBetwenZeroandH , (1+ScalHighPointValueRepeatability),0),LineFunction(LineBetwenZeroandH, 1, 0) ,color='red',alpha=LowHighfillalpha)
+
+    plt.fill_between(LineBetwenLandH , LineFunction(LineBetwenLandH , (1+ScalHighPointValueRepeatability),0),LineFunction(LineBetwenLandH, a2, b2) ,color='green',alpha=LowHighfillalpha)
+      
+    #小量程偏差高点 连接 大量程 偏差高点 方程 
+
+    line, = plt.plot(x, LineFunction(x,1,ScalHighPointValueRepeatability* ScalHighPointValue), '-', linewidth=1)
+    line, = plt.plot(x, LineFunction(x,1,ScalLowPointValueRepeatability* ScalHighPointValue), '-', linewidth=1)
+
+    
+    fillLowHighRepeatability = 0
+#    plt.fill(,,alpha=0.3)
+#    fig, (ax1) = plt.subplots(3, 1, sharex=True)
+
+#    plt.fill_between(x, ScalLowPointValue ,ScalHighPointValue * (1-ScalHighPointValueRepeatability))
+#    plt.fill_between(y, ScalLowPointValue,ScalHighPointValue)
+    
+       
+    plt.grid(True)
+    
+#    line, = plt.plot(x, 0.8 * x, '.-', linewidth=1)
+#    plt.annotate('y=0.8*x', xy=(1400, 1200), xytext=(1450, 1100))
+
+    
+    dashes = [10, 5, 100, 5]  # 10 points on, 5 off, 100 on, 5 off
+    line.set_dashes(dashes)
+    
+    plt.show()
